@@ -1,0 +1,26 @@
+package com.jupitters.movieApi.controller;
+
+import com.jupitters.movieApi.service.FileService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/file")
+public class FileController {
+    private final FileService fileService;
+
+    @Value("${projects.poster}")
+    private String path;
+
+    public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException {
+        fileService.uploadFile(path, file);
+    }
+}
