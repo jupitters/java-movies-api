@@ -31,4 +31,7 @@ public class MovieDto {
 
     @NotBlank(message = "Poster must not be blank.")
     private String poster;
+
+    @NotBlank(message = "Poster url must not be blank.")
+    private String posterUrl;
 }
