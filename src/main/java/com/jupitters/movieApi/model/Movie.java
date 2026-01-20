@@ -23,6 +23,8 @@ public class Movie {
     @NotBlank(message = "Studio must not be blank.")
     private String studio;
 
+    @ElementCollection
+    @CollectionTable(name = "movie_cast")
     private Set<String> movieCast;
 
     @Column(nullable = false)
