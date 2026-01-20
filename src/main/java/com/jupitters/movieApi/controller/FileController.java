@@ -1,16 +1,18 @@
 package com.jupitters.movieApi.controller;
 
 import com.jupitters.movieApi.service.FileService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +27,12 @@ public class FileController {
     public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException {
         String uploadedFileName = fileService.uploadFile(path, file);
         return ResponseEntity.ok("File uploaded: " + uploadedFileName);
+    }
+
+    @GetMapping("/${filename}")
+    public void serveFileHandler(@PathVariable String filename, HttpServletResponse response) throws IOException, FileNotFoundException {
+        InputStream resourceFile = fileService.getResourceFile(path, filename);
+        response.setContentType(MediaType.IMAGE_PNG_VALUE);
+        StreamUtils.copy(resourceFile, response.getOutputStream());
     }
 }
