@@ -24,7 +24,6 @@ public class MovieController {
 
     private MovieDto convertToMovieDto(String movieDtoObj){
         ObjectMapper objectMapper = new ObjectMapper();
-        MovieDto movieDto = objectMapper.readValue(movieDtoObj, MovieDto.class);
-        return movieDto;
+        return objectMapper.readValue(movieDtoObj, MovieDto.class);
     }
 }
