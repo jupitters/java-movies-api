@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface MovieService {
-    MovieDto addMovie(MovieDto movieDto, MultipartFile file);
+    MovieDto addMovie(MovieDto movieDto, MultipartFile file) throws IOException;
     MovieDto getMovie(Long movieId);
     List<MovieDto> getAllMovies();
 }
