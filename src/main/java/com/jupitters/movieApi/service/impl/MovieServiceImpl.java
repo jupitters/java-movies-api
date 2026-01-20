@@ -22,6 +22,9 @@ public class MovieServiceImpl implements MovieService {
     @Value("${projects.poster}")
     private String path;
 
+    @Value("${base.url}")
+    private String baseUrl;
+
     @Override
     public MovieDto addMovie(MovieDto movieDto, MultipartFile file) throws IOException {
         String uploadedFileName = fileService.uploadFile(path, file);
@@ -37,8 +40,20 @@ public class MovieServiceImpl implements MovieService {
                 movieDto.getPoster()
         );
         Movie savedMovie = movieRepository.save(movie);
+        String posterUrl = baseUrl + "/file/" + uploadedFileName;
 
-        return null;
+        MovieDto response =  new MovieDto(
+                savedMovie.getId(),
+                savedMovie.getTitle(),
+                savedMovie.getDirector(),
+                savedMovie.getStudio(),
+                savedMovie.getMovieCast(),
+                savedMovie.getReleaseYear(),
+                savedMovie.getPoster(),
+                posterUrl
+        );
+
+        return response;
     }
 
     @Override
