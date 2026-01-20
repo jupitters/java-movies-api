@@ -4,6 +4,7 @@ import com.jupitters.movieApi.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,9 @@ public class FileController {
     @Value("${projects.poster}")
     private String path;
 
+    @PostMapping("/upload")
     public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException {
-        fileService.uploadFile(path, file);
+        String uploadedFileName = fileService.uploadFile(path, file);
+        return ResponseEntity.ok("File uploaded: " + uploadedFileName);
     }
 }
