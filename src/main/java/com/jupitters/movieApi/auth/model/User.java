@@ -24,6 +24,11 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
+    private boolean isEnabled = true;
+    private boolean isAccountNonExpired = true;
+    private boolean isAccountNonLocked = true;
+    private boolean isCredentialsNonExpired = true;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -44,21 +49,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return isAccountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return isCredentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return isEnabled;
     }
 }
