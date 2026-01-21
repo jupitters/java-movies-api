@@ -107,7 +107,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto updateMovie(Long movieId, MovieDto movieDto, MultipartFile file) throws IOException {
-        Movie mv = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Movie not found!"));
+        Movie mv = movieRepository.findById(movieId).orElseThrow(() -> new ResourceNotFoundException("Movie not found!"));
         String fileName = mv.getPoster();
         if(file != null){
             Files.deleteIfExists(Paths.get(path + File.separator + fileName));
