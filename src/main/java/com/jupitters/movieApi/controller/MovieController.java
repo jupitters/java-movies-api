@@ -5,10 +5,7 @@ import com.jupitters.movieApi.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.ObjectMapper;
 
@@ -25,6 +22,11 @@ public class MovieController {
         MovieDto dto = convertToMovieDto(movieDto);
         MovieDto response = movieService.addMovie(dto, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{movieId}")
+    public ResponseEntity<MovieDto> getMovie(Long movieId){
+        return ResponseEntity.ok(movieService.getMovie(movieId));
     }
 
     private MovieDto convertToMovieDto(String movieDtoObj){
