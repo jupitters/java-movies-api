@@ -1,6 +1,8 @@
 package com.jupitters.movieApi.auth.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +21,20 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Name is necessary")
     private String name;
+    @NotBlank(message = "Username is necessary")
+    @Column(unique = true)
     private String username;
+    @NotBlank(message = "Email is necessary")
+    @Column(unique = true)
+    @Email
     private String email;
+    @NotBlank(message = "Password is necessary")
     private String password;
+
+    private RefreshToken refreshToken;
 
     private boolean isEnabled = true;
     private boolean isAccountNonExpired = true;
@@ -39,12 +51,12 @@ public class User implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 
     @Override
