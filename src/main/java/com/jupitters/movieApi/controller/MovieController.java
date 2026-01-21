@@ -4,6 +4,7 @@ import com.jupitters.movieApi.dto.MovieDto;
 import com.jupitters.movieApi.dto.MoviePageResponse;
 import com.jupitters.movieApi.exception.EmptyFileException;
 import com.jupitters.movieApi.service.MovieService;
+import com.jupitters.movieApi.utils.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,12 @@ public class MovieController {
     }
 
     @GetMapping("/allMoviesPage")
-    public ResponseEntity<MoviePageResponse> getMoviesWithPagination()
+    public ResponseEntity<MoviePageResponse> getMoviesWithPagination(
+            @RequestParam(defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize
+    ){
+        return ResponseEntity.ok(movieService.getAllMoviesWithPagination(pageNumber, pageSize));
+    }
 
     private MovieDto convertToMovieDto(String movieDtoObj){
         ObjectMapper objectMapper = new ObjectMapper();
