@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto addMovie(MovieDto movieDto, MultipartFile file) throws IOException {
+        if(Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))){
+            throw new RuntimeException("File already exists!");
+        }
+
         String uploadedFileName = fileService.uploadFile(path, file);
         movieDto.setPoster(uploadedFileName);
 
@@ -94,5 +101,15 @@ public class MovieServiceImpl implements MovieService {
             moviesDtos.add(movieDto);
         }
         return moviesDtos;
+    }
+
+    @Override
+    public MovieDto updateMovie(Long movieId, MovieDto movieDto, MultipartFile file) throws IOException {
+        return null;
+    }
+
+    @Override
+    public String deleteMovie(Long movieId) {
+        return "";
     }
 }
