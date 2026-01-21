@@ -1,6 +1,7 @@
 package com.jupitters.movieApi.service.impl;
 
 import com.jupitters.movieApi.dto.MovieDto;
+import com.jupitters.movieApi.exception.ResourceNotFoundException;
 import com.jupitters.movieApi.model.Movie;
 import com.jupitters.movieApi.repositories.MovieRepository;
 import com.jupitters.movieApi.service.FileService;
@@ -67,7 +68,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto getMovie(Long movieId) {
-        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Movie not found!"));
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new ResourceNotFoundException("Movie not found!"));
         String posterUrl = baseUrl + "/file/" + movie.getPoster();
         MovieDto response =  new MovieDto(
                 movie.getId(),
