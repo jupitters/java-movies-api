@@ -192,7 +192,7 @@ public class MovieServiceImpl implements MovieService {
         Sort sort = sortBy.equalsIgnoreCase("asc") ? Sort.by(dir).ascending()
                                                                 : Sort.by(dir).descending();
 
-        Pageable pageable = (Pageable) PageRequest.of(pageNumber, pageSize);
+        Pageable pageable = (Pageable) PageRequest.of(pageNumber, pageSize, sort);
         Page<Movie> moviePages = movieRepository.findAll((org.springframework.data.domain.Pageable) pageable);
         List<Movie> movies = moviePages.getContent();
 
