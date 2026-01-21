@@ -39,7 +39,7 @@ public class MovieServiceImpl implements MovieService {
         movieDto.setPoster(uploadedFileName);
 
         Movie movie  = new Movie(
-                movieDto.getId(),
+                null,
                 movieDto.getTitle(),
                 movieDto.getDirector(),
                 movieDto.getStudio(),
@@ -105,7 +105,39 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto updateMovie(Long movieId, MovieDto movieDto, MultipartFile file) throws IOException {
-        return null;
+        Movie mv = movieRepository.findById(movieId).orElseThrow(() -> new RuntimeException("Movie not found!"));
+        String fileName = mv.getPoster();
+        if(file != null){
+            Files.deleteIfExists(Paths.get(path + File.separator + fileName));
+            fileName = fileService.uploadFile(path, file);
+        }
+
+        movieDto.setPoster(fileName);
+
+        Movie movie = new Movie(
+                mv.getId(),
+                movieDto.getTitle(),
+                movieDto.getDirector(),
+                movieDto.getStudio(),
+                movieDto.getMovieCast(),
+                movieDto.getReleaseYear(),
+                movieDto.getPoster()
+        );
+        Movie updatedMovie = movieRepository.save(movie);
+        String posterUrl = baseUrl + "/file/" + fileName;
+
+        MovieDto response = new MovieDto(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getDirector(),
+                movie.getStudio(),
+                movie.getMovieCast(),
+                movie.getReleaseYear(),
+                movie.getPoster(),
+                posterUrl
+        );
+
+        return response;
     }
 
     @Override
