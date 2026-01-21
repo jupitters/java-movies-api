@@ -1,6 +1,7 @@
 package com.jupitters.movieApi.service.impl;
 
 import com.jupitters.movieApi.dto.MovieDto;
+import com.jupitters.movieApi.dto.MoviePageResponse;
 import com.jupitters.movieApi.exception.ResourceNotFoundException;
 import com.jupitters.movieApi.model.Movie;
 import com.jupitters.movieApi.repositories.MovieRepository;
@@ -33,14 +34,14 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto addMovie(MovieDto movieDto, MultipartFile file) throws IOException {
-        if(Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))){
+        if (Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))) {
             throw new FileAlreadyExistsException("File already exists!");
         }
 
         String uploadedFileName = fileService.uploadFile(path, file);
         movieDto.setPoster(uploadedFileName);
 
-        Movie movie  = new Movie(
+        Movie movie = new Movie(
                 null,
                 movieDto.getTitle(),
                 movieDto.getDirector(),
@@ -52,7 +53,7 @@ public class MovieServiceImpl implements MovieService {
         Movie savedMovie = movieRepository.save(movie);
         String posterUrl = baseUrl + "/file/" + uploadedFileName;
 
-        MovieDto response =  new MovieDto(
+        MovieDto response = new MovieDto(
                 savedMovie.getId(),
                 savedMovie.getTitle(),
                 savedMovie.getDirector(),
@@ -70,7 +71,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieDto getMovie(Long movieId) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new ResourceNotFoundException("Movie not found!"));
         String posterUrl = baseUrl + "/file/" + movie.getPoster();
-        MovieDto response =  new MovieDto(
+        MovieDto response = new MovieDto(
                 movie.getId(),
                 movie.getTitle(),
                 movie.getDirector(),
@@ -88,9 +89,9 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> movies = movieRepository.findAll();
         List<MovieDto> moviesDtos = new ArrayList<>();
 
-        for(Movie movie : movies){
+        for (Movie movie : movies) {
             String posterUrl = baseUrl + "/file/" + movie.getPoster();
-            MovieDto movieDto =  new MovieDto(
+            MovieDto movieDto = new MovieDto(
                     movie.getId(),
                     movie.getTitle(),
                     movie.getDirector(),
@@ -109,7 +110,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieDto updateMovie(Long movieId, MovieDto movieDto, MultipartFile file) throws IOException {
         Movie mv = movieRepository.findById(movieId).orElseThrow(() -> new ResourceNotFoundException("Movie not found!"));
         String fileName = mv.getPoster();
-        if(file != null){
+        if (file != null) {
             Files.deleteIfExists(Paths.get(path + File.separator + fileName));
             fileName = fileService.uploadFile(path, file);
         }
@@ -149,5 +150,15 @@ public class MovieServiceImpl implements MovieService {
         Files.deleteIfExists(Paths.get(path + File.separator + movie.getPoster()));
         movieRepository.delete(movie);
         return "Deletes successfully movie with id: " + id;
+    }
+
+    @Override
+    public MoviePageResponse getAllMoviesWithPagination(Integer pageNumber, Integer pageSize) {
+        return null;
+    }
+
+    @Override
+    public MoviePageResponse getAllMoviesWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String dir) {
+        return null;
     }
 }

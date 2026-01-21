@@ -1,6 +1,7 @@
 package com.jupitters.movieApi.service;
 
 import com.jupitters.movieApi.dto.MovieDto;
+import com.jupitters.movieApi.dto.MoviePageResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -12,4 +13,6 @@ public interface MovieService {
     List<MovieDto> getAllMovies();
     MovieDto updateMovie(Long movieId,  MovieDto movieDto, MultipartFile file) throws IOException;
     String deleteMovie(Long movieId) throws IOException;
+    MoviePageResponse getAllMoviesWithPagination(Integer pageNumber, Integer pageSize);
+    MoviePageResponse getAllMoviesWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String dir);
 }
