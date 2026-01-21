@@ -34,6 +34,7 @@ public class User implements UserDetails {
     @NotBlank(message = "Password is necessary")
     private String password;
 
+    @OneToOne(mappedBy = "user")
     private RefreshToken refreshToken;
 
     private boolean isEnabled = true;
