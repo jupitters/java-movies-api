@@ -3,6 +3,7 @@ package com.jupitters.movieApi.controller;
 import com.jupitters.movieApi.dto.MovieDto;
 import com.jupitters.movieApi.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,11 @@ public class MovieController {
         if(file.isEmpty()) file = null;
         MovieDto movieDto = convertToMovieDto(movieDtoObj);
         return ResponseEntity.ok(movieService.updateMovie(movieId, movieDto, file));
+    }
+
+    @DeleteMapping("/{movieId}/delete")
+    public ResponseEntity<String> deleteMovie(@PathVariable Long movieId) throws IOException {
+        return ResponseEntity.ok(movieService.deleteMovie(movieId));
     }
 
     private MovieDto convertToMovieDto(String movieDtoObj){
