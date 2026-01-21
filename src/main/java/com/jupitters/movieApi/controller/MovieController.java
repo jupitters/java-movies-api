@@ -1,6 +1,7 @@
 package com.jupitters.movieApi.controller;
 
 import com.jupitters.movieApi.dto.MovieDto;
+import com.jupitters.movieApi.exception.EmptyFileException;
 import com.jupitters.movieApi.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -21,6 +22,9 @@ public class MovieController {
 
     @PostMapping("/add")
     public ResponseEntity<MovieDto> addMovieHandler(@RequestPart MultipartFile file, @RequestPart String movieDto) throws IOException {
+        if(file.isEmpty()){
+            throw new EmptyFileException("File is empty!");
+        }
         MovieDto dto = convertToMovieDto(movieDto);
         MovieDto response = movieService.addMovie(dto, file);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
