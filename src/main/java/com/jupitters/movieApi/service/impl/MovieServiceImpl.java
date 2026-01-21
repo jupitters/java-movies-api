@@ -9,9 +9,12 @@ import com.jupitters.movieApi.service.FileService;
 import com.jupitters.movieApi.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -154,7 +157,33 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MoviePageResponse getAllMoviesWithPagination(Integer pageNumber, Integer pageSize) {
-        return null;
+        Pageable pageable = (Pageable) PageRequest.of(pageNumber, pageSize);
+        Page<Movie> moviePages = movieRepository.findAll((org.springframework.data.domain.Pageable) pageable);
+        List<Movie> movies = moviePages.getContent();
+
+        List<MovieDto> moviesDtos = new ArrayList<>();
+
+        for (Movie movie : movies) {
+            String posterUrl = baseUrl + "/file/" + movie.getPoster();
+            MovieDto movieDto = new MovieDto(
+                    movie.getId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    posterUrl
+            );
+            moviesDtos.add(movieDto);
+        }
+
+        return new MoviePageResponse(moviesDtos,
+                pageNumber,
+                pageSize,
+                moviePages.getTotalElements(),
+                moviePages.getTotalPages(),
+                moviePages.isLast());
     }
 
     @Override
