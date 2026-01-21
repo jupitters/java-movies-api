@@ -17,5 +17,8 @@ public class GlobalExceptionHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-
+    @ExceptionHandler(FileAlreadyExistsException.class)
+    public ProblemDetail handleFileAlreadyExistsException(FileAlreadyExistsException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
 }
