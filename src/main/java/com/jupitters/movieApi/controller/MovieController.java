@@ -31,7 +31,9 @@ public class MovieController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<MovieDto>> getAllMovies(){}
+    public ResponseEntity<List<MovieDto>> getAllMovies(){
+        return ResponseEntity.ok(movieService.getAllMovies());
+    }
 
     private MovieDto convertToMovieDto(String movieDtoObj){
         ObjectMapper objectMapper = new ObjectMapper();
