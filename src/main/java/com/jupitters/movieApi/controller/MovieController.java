@@ -34,6 +34,13 @@ public class MovieController {
     public ResponseEntity<List<MovieDto>> getAllMovies(){
         return ResponseEntity.ok(movieService.getAllMovies());
     }
+    
+    @PutMapping("/{movieId}/update")
+    public ResponseEntity<MovieDto> updateMovie(@PathVariable Long movieId, @RequestPart MultipartFile file, @RequestPart String movieDtoObj) throws IOException {
+        if(file.isEmpty()) file = null;
+        MovieDto movieDto = convertToMovieDto(movieDtoObj);
+        return ResponseEntity.ok(movieService.updateMovie(movieId, movieDto, file));
+    }
 
     private MovieDto convertToMovieDto(String movieDtoObj){
         ObjectMapper objectMapper = new ObjectMapper();
