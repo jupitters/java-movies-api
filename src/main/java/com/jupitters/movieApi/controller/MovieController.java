@@ -1,6 +1,7 @@
 package com.jupitters.movieApi.controller;
 
 import com.jupitters.movieApi.dto.MovieDto;
+import com.jupitters.movieApi.dto.MoviePageResponse;
 import com.jupitters.movieApi.exception.EmptyFileException;
 import com.jupitters.movieApi.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,9 @@ public class MovieController {
     public ResponseEntity<String> deleteMovie(@PathVariable Long movieId) throws IOException {
         return ResponseEntity.ok(movieService.deleteMovie(movieId));
     }
+
+    @GetMapping("/allMoviesPage")
+    public ResponseEntity<MoviePageResponse> getMoviesWithPagination()
 
     private MovieDto convertToMovieDto(String movieDtoObj){
         ObjectMapper objectMapper = new ObjectMapper();
