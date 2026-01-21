@@ -190,7 +190,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MoviePageResponse getAllMoviesWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String dir) {
         Sort sort = dir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
-                                                                : Sort.by(dir).descending();
+                                                                : Sort.by(sortBy).descending();
 
         Pageable pageable = (Pageable) PageRequest.of(pageNumber, pageSize, sort);
         Page<Movie> moviePages = movieRepository.findAll((org.springframework.data.domain.Pageable) pageable);
