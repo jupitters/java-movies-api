@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -188,6 +189,35 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MoviePageResponse getAllMoviesWithPaginationAndSorting(Integer pageNumber, Integer pageSize, String sortBy, String dir) {
-        return null;
+        Sort sort = sortBy.equalsIgnoreCase("asc") ? Sort.by(dir).ascending()
+                                                                : Sort.by(dir).descending();
+
+        Pageable pageable = (Pageable) PageRequest.of(pageNumber, pageSize);
+        Page<Movie> moviePages = movieRepository.findAll((org.springframework.data.domain.Pageable) pageable);
+        List<Movie> movies = moviePages.getContent();
+
+        List<MovieDto> moviesDtos = new ArrayList<>();
+
+        for (Movie movie : movies) {
+            String posterUrl = baseUrl + "/file/" + movie.getPoster();
+            MovieDto movieDto = new MovieDto(
+                    movie.getId(),
+                    movie.getTitle(),
+                    movie.getDirector(),
+                    movie.getStudio(),
+                    movie.getMovieCast(),
+                    movie.getReleaseYear(),
+                    movie.getPoster(),
+                    posterUrl
+            );
+            moviesDtos.add(movieDto);
+        }
+
+        return new MoviePageResponse(moviesDtos,
+                pageNumber,
+                pageSize,
+                moviePages.getTotalElements(),
+                moviePages.getTotalPages(),
+                moviePages.isLast());
     }
 }
