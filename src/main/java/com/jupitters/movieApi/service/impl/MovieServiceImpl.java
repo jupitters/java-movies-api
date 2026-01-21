@@ -30,7 +30,7 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final FileService fileService;
 
-    @Value("${projects.poster}")
+    @Value("${project.poster}")
     private String path;
 
     @Value("${base.url}")

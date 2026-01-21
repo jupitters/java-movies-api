@@ -20,7 +20,7 @@ import java.io.InputStream;
 public class FileController {
     private final FileService fileService;
 
-    @Value("${projects.poster}")
+    @Value("${project.poster}")
     private String path;
 
     @PostMapping("/upload")
@@ -29,7 +29,7 @@ public class FileController {
         return ResponseEntity.ok("File uploaded: " + uploadedFileName);
     }
 
-    @GetMapping("/${filename}")
+    @GetMapping("/{filename}")
     public void serveFileHandler(@PathVariable String filename, HttpServletResponse response) throws IOException, FileNotFoundException {
         InputStream resourceFile = fileService.getResourceFile(path, filename);
         response.setContentType(MediaType.IMAGE_PNG_VALUE);
