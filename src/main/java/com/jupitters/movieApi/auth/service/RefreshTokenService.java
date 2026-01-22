@@ -8,6 +8,9 @@ import com.jupitters.movieApi.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
@@ -19,9 +22,15 @@ public class RefreshTokenService {
                 .orElseThrow(() -> new ResourceNotFoundException("Username not found!"));
         RefreshToken refreshToken = user.getRefreshToken();
         if(refreshToken == null){
-            refreshToken = RefreshToken
+            long refreshTOkenValidity = 1000 * 5 * 60 * 60;
+            refreshToken = RefreshToken.builder()
+                    .refreshToken(UUID.randomUUID().toString())
+                    .expirationTime(Instant.now().plusMillis(refreshTOkenValidity))
+                    .user(user)
+                    .build();
+            refreshTokenRepository.save(refreshToken);
         }
 
-        return refreshToken
+        return refreshToken;
     }
 }
