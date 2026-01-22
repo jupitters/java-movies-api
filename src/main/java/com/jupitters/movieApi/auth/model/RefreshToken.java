@@ -2,10 +2,16 @@ package com.jupitters.movieApi.auth.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
