@@ -5,8 +5,13 @@ import com.jupitters.movieApi.auth.model.Role;
 import com.jupitters.movieApi.auth.model.User;
 import com.jupitters.movieApi.auth.repositories.UserRepository;
 import com.jupitters.movieApi.auth.utils.AuthResponse;
+import com.jupitters.movieApi.auth.utils.LoginRequest;
 import com.jupitters.movieApi.auth.utils.RegisterRequest;
+import com.jupitters.movieApi.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +22,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-
+    private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest registerRequest){
         User user = User.builder()
@@ -37,5 +42,18 @@ public class AuthService {
                 .build();
     }
 
+    public AuthResponse login(LoginRequest loginRequest){
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+        );
+        User user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("User or password not found!"));
+        String accessToken = jwtService.generateToken(user);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(loginRequest.getEmail());
 
+        return AuthResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getRefreshToken())
+                .build();
+    }
 }
