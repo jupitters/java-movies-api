@@ -1,8 +1,13 @@
 package com.jupitters.movieApi.controller;
 
+import com.jupitters.movieApi.auth.model.RefreshToken;
+import com.jupitters.movieApi.auth.model.User;
 import com.jupitters.movieApi.auth.service.AuthService;
+import com.jupitters.movieApi.auth.service.JwtService;
+import com.jupitters.movieApi.auth.service.RefreshTokenService;
 import com.jupitters.movieApi.auth.utils.AuthResponse;
 import com.jupitters.movieApi.auth.utils.LoginRequest;
+import com.jupitters.movieApi.auth.utils.RefreshTokenRequest;
 import com.jupitters.movieApi.auth.utils.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
+    private final JwtService jwtService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest registerRequest) {
@@ -25,5 +32,18 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        RefreshToken refreshToken = refreshTokenService.verifyRefreshToken(refreshTokenRequest.getRefreshToken());
+        User user = refreshToken.getUser();
+
+        String accessToken = jwtService.generateToken(user);
+
+        return ResponseEntity.ok(AuthResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken.getRefreshToken())
+                .build());
     }
 }
